@@ -35,8 +35,15 @@ async function login(req, res) {
     const token = jwt.sign({ userId: user.id }, "your-secret-key", {
       expiresIn: "1h",
     });
-    const response = { message: "Login successful", userId: user.id, token };
-    res.status(200).json(response);
+
+    req.session.user = { id: user.id, username: user.username };
+
+    res.status(200).json({
+      message: "Login successful",
+      userId: user.id,
+      token,
+      sessionId: req.sessionID,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).send("Database error");

@@ -1,7 +1,7 @@
 const redis = require("redis");
 
 const client = redis.createClient({
-  url: "redis://localhost:6379",
+  url: "redis://redis:6379",
   password: "eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81",
 });
 
