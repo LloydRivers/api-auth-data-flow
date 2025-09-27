@@ -2,6 +2,7 @@ const { getUserByUsername, createUser } = require("../models/user");
 const { hashPassword } = require("../utils/hash");
 const { comparePassword } = require("../utils/hash");
 const { requireUsernameAndPassword } = require("../utils/validation");
+const jwt = require("jsonwebtoken");
 
 async function signup(req, res) {
   try {
@@ -31,8 +32,11 @@ async function login(req, res) {
 
     const isValid = await comparePassword(password, user.password);
     if (!isValid) return res.status(401).send("Invalid credentials");
-
-    res.status(200).json({ message: "Login successful", userId: user.id });
+    const token = jwt.sign({ userId: user.id }, "your-secret-key", {
+      expiresIn: "1h",
+    });
+    const response = { message: "Login successful", userId: user.id, token };
+    res.status(200).json(response);
   } catch (err) {
     console.error(err);
     res.status(500).send("Database error");
